@@ -30,6 +30,14 @@ class _AddProductPageState extends State<AddProductPage> {
         FirebaseFirestore.instance.collection(widget.databseName);
     final houseHoldItems =
         FirebaseFirestore.instance.collection(widget.databseName);
+
+    void deleteData(id) {
+      FirebaseFirestore.instance
+          .collection(widget.databseName)
+          .doc(id)
+          .delete();
+    }
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -256,27 +264,84 @@ class _AddProductPageState extends State<AddProductPage> {
                                       ),
                                       Expanded(
                                         flex: 1,
-                                        child: Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Icon(
-                                                    Icons.delete,
-                                                    size: 30,
-                                                    color: Colors.red,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                              barrierDismissible: false,
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Dialog(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.0),
                                                   ),
-                                                ),
-                                              ),
-                                            ],
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.all(20.0),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                          "Do you want to delete",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 20.0,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 20.0),
+                                                        SizedBox(height: 20.0),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            ElevatedButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: Text(
+                                                                  "Cancel"),
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed: () {
+                                                                deleteData(
+                                                                    snapshot
+                                                                        .data!
+                                                                        .docs[
+                                                                            index]
+                                                                        .id);
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                                Fluttertoast
+                                                                    .showToast(
+                                                                        msg:
+                                                                            "Deleted Successfully");
+                                                              },
+                                                              child:
+                                                                  Text("Yes"),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.delete,
+                                              size: 30,
+                                              color: Colors.red,
+                                            ),
                                           ),
                                         ),
                                       ),

@@ -283,10 +283,19 @@ class _ViewMyCartState extends State<ViewMyCart> {
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                  _submitData();
-                                  CartDatabase.instance.clearTable();
+                                  if (nameController.text.isNotEmpty &&
+                                      phoneController.text.isNotEmpty &&
+                                      roadController.text.isNotEmpty &&
+                                      blockController.text.isNotEmpty &&
+                                      houseController.text.isNotEmpty &&
+                                      locationController.text.isNotEmpty) {
+                                    _submitData();
+                                    CartDatabase.instance.clearTable();
+                                  } else {
+                                    print("enter data");
+                                  }
                                 },
-                                child: Text("Submit Order Now"),
+                                child: Text("Place Order Now"),
                               ),
                             ],
                           ),
@@ -303,7 +312,7 @@ class _ViewMyCartState extends State<ViewMyCart> {
               color: Colors.yellow,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50),
-                child: Center(child: Text("Submit Order")),
+                child: Center(child: Text("Continue")),
               ),
             ),
           ),
