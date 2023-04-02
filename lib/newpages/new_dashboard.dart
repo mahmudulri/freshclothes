@@ -19,6 +19,8 @@ class NewUserDashBoard extends StatefulWidget {
 
 class _NewUserDashBoardState extends State<NewUserDashBoard> {
   final auth = FirebaseAuth.instance;
+  final usernotice =
+      FirebaseFirestore.instance.collection("My-Notice").snapshots();
 
   final database = FirebaseFirestore.instance;
   final box = GetStorage();
@@ -192,44 +194,37 @@ class _NewUserDashBoardState extends State<NewUserDashBoard> {
       body: Column(
         children: [
           Container(
-            height: 80,
+            height: 50,
             width: screenWidth,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
               // color: Color(0xff3498db),
               color: Colors.grey,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: screenHeight * 0.010,
-                  ),
-                  Container(
-                    height: 30,
-                    child: Marquee(
-                      text: 'Notice from admin in here for all users',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                      scrollAxis: Axis.horizontal,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      blankSpace: 20.0,
-                      velocity: 50.0,
-                      pauseAfterRound: Duration(seconds: 1),
-                      startPadding: 10.0,
-                      accelerationDuration: Duration(seconds: 1),
-                      accelerationCurve: Curves.linear,
-                      decelerationDuration: Duration(milliseconds: 500),
-                      decelerationCurve: Curves.easeOut,
-                    ),
-                  ),
-                ],
+              child: StreamBuilder(
+                stream: usernotice,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text("No Important Notice Available");
+                  } else {}
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Text(
+                            snapshot.data!.docs[index]["notice"].toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ),
